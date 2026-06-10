@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useRef } from "react"
 
 const letters = "abcdefghijklmnopqrstuvwxyz";
 const numbers = "0123456789";
@@ -6,12 +6,13 @@ const symbols = `!@#$%^&*()-_=+[]{}|;:'\\",.<>?/\`~`;
 
 function App() {
 
-    const [fullName, setFullName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [specialization, setSpecialization] = useState("Full Stack");
-    const [experienceYears, setExperienceYears] = useState("");
     const [description, setDescription] = useState("");
+
+    const fullNameRef = useRef();
+    const specializationRef = useRef();
+    const experienceYearsRef = useRef();
 
     const isUsernameValid = useMemo(() => {
 
@@ -47,6 +48,10 @@ function App() {
     const handleSubmit = e => {
         e.preventDefault();
 
+        const fullName = fullNameRef.current.value;
+        const specialization = specializationRef.current.value;
+        const experienceYears = experienceYearsRef.current.value;
+
         if (
             !fullName.trim() ||
             !username.trim() ||
@@ -80,8 +85,8 @@ function App() {
                     <p>Full Name</p>
                     <input
                         type="text"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)} />
+                        ref={fullNameRef}
+                    />
                 </label>
                 <label>
                     <p>Username</p>
@@ -110,8 +115,8 @@ function App() {
                 <label>
                     <p>Specialization</p>
                     <select
-                        value={specialization}
-                        onChange={e => setSpecialization(e.target.value)}>
+                        ref={specializationRef}
+                    >
                         <option value="Full Stack">Full Stack</option>
                         <option value="Frontend">Frontend</option>
                         <option value="Backend">Backend</option>
@@ -121,18 +126,18 @@ function App() {
                     <p>Experience Years</p>
                     <input
                         type="number"
-                        value={experienceYears}
-                        onChange={(e) => setExperienceYears(e.target.value)} />
+                        ref={experienceYearsRef}
+                    />
                 </label>
                 <label>
                     <p>Description</p>
                     <textarea
                         value={description}
-                        onChange={e => setDescription(e.target.value)}
-                    />
+                        onChange={(e) => setDescription(e.target.value)}>
+                    </textarea>
                     {description.trim() && (
                         <p style={{ color: isDescriptionValid ? "green" : "red" }}>
-                            {isDescriptionValid ? "Description is valid" : `Description length must be between 100 and "1000 characters (${description.trim().length})`}
+                            {isDescriptionValid ? "Description is valid" : `Description length must be between 100 and 1000 characters (${description.trim().length})`}
                         </p>
                     )}
                 </label>
